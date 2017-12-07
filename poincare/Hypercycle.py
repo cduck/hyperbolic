@@ -126,7 +126,10 @@ class Hypercycle:
             x1, y1, x2, y2 = intersection.lineCircle(hcycle.projShape, unit)
             lineAng = math.atan2(y2-y1, x2-x1)
             mx, my = (x1+x2)/2, (y1+y2)/2  # Midpoint
-            ang = math.atan2(my, mx)
+            if util.nearZero(mx) and util.nearZero(my):
+                ang = math.atan2(y2-y1, x2-x1) + math.pi/2
+            else:
+                ang = math.atan2(my, mx)
             # Test if the line goes clockwise around the origin
             cw = (ang - lineAng) % (math.pi*2) < math.pi
             rm = math.hypot(mx, my)
@@ -134,7 +137,7 @@ class Hypercycle:
             dhMid = 2 * math.atanh(deMid)
             sign = 1 if cw else -1
             t = math.tanh((dhMid + sign*dh)/2)
-            xOff, yOff = t * mx / rm, t * my / rm
+            xOff, yOff = t * math.cos(ang), t * math.sin(ang)
         return cls.fromPoints(x1, y1, x2, y2, xOff, yOff, segment=False, excludeMid=False)
     @staticmethod
     def _pointsInlineWithOrigin(x1, y1, x2, y2):
