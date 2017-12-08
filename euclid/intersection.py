@@ -67,7 +67,7 @@ def circleLine(circ, line):
         raise InsufficientPrecision()
     cx, cy, r = circ.cx, circ.cy, circ.r
     x1, y1, x2, y2 = line.x1-cx, line.y1-cy, line.x2-cx, line.y2-cy
-    # Calculate anlges and minimum distance from circle center to line
+    # Calculate angles and minimum distance from circle center to line
     lineRad = math.atan2(ldy, ldx)
     pRad = math.atan2(y1, x1)
     pMag = math.sqrt(x1**2 + y1**2)

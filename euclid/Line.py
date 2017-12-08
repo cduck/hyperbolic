@@ -71,10 +71,10 @@ class Line:
         if isinstance(circ1, Line) and isinstance(circ2, Line):
             raise ValueError('No radical axis exists for two lines')
         elif isinstance(circ1, Line):
-            # TODO: Possibly correct direction to be consistant
+            # TODO: Possibly correct direction to be consistent
             return circ1
         elif isinstance(circ2, Line):
-            # TODO: Possibly correct direction to be consistant
+            # TODO: Possibly correct direction to be consistent
             return circ2
         else:
             cx1, cy1, r1 = circ1.cx, circ1.cy, circ1.r
