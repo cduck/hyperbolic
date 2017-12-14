@@ -38,8 +38,20 @@ class Polygon:
                 edges[i] = edge.trimmed(*startP, *endP, chooseShorter=True)
         self.edges = tuple(edges)
         self.vertices = tuple(vertices)
+    def offsetPolygon(self, offset, reverseOrder=False):
+        ''' If self is a CCW polygon, returns a CCW polygon that is smaller by
+            offset. '''
+        edges = self.edges
+        if reverseOrder:
+            edges = reversed(edges)
+        offEdges = [  # Maybe outer, maybe inner
+            edge.makeOffset(offset)
+            for edge in edges
+            if not isinstance(edge, Point) or edge.isIdeal()
+        ]
+        return Polygon.fromEdges(offEdges, join=True)
     @staticmethod
-    def fromEdges(edges, join=False):
+    def fromEdges(edges, join=True):
         return Polygon(edges=edges, join=join)
     @staticmethod
     def fromVertices(vertices):
@@ -55,20 +67,22 @@ class Polygon:
                 hwidth1, hwidth2 = hwidth
             except TypeError:
                 hwidth = float(hwidth)
-                hwidth1, hwidth2 = hwidth/2, -hwidth/2
+                hwidth1, hwidth2 = -hwidth/2, hwidth/2
             path = elements.Path(**kwargs)
-            outerEdges = [  # Maybe outer, maybe inner
-                edge.makeOffset(hwidth1)
-                for edge in self.edges
-                if not isinstance(edge, Point)
-            ]
-            innerEdges = [  # Maybe outer, maybe inner
-                edge.makeOffset(hwidth2)
-                for edge in reversed(self.edges)
-                if not isinstance(edge, Point)
-            ]
-            outerPoly = Polygon(outerEdges, join=True)
-            innerPoly = Polygon(innerEdges, join=True)
+            #outerEdges = [  # Maybe outer, maybe inner
+            #    edge.makeOffset(hwidth1)
+            #    for edge in self.edges
+            #    if not isinstance(edge, Point)
+            #]
+            #innerEdges = [  # Maybe outer, maybe inner
+            #    edge.makeOffset(hwidth2)
+            #    for edge in reversed(self.edges)
+            #    if not isinstance(edge, Point)
+            #]
+            #outerPoly = Polygon(outerEdges, join=True)
+            #innerPoly = Polygon(innerEdges, join=True)
+            outerPoly = self.offsetPolygon(hwidth1, reverseOrder=False)
+            innerPoly = self.offsetPolygon(hwidth2, reverseOrder=True)
             outerPoly.drawToPath(path, includeM=True, includeL=False, **kwargs)
             innerPoly.drawToPath(path, includeM=False, includeL=True, **kwargs)
             path.Z()

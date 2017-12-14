@@ -24,11 +24,19 @@ class Point:
         return (self.x, self.y)[i]
     def __len__(self):
         return 2
+    def isIdeal(self):
+        return util.nearZero(math.hypot(self.x, self.y) - 1)
     def polarAngleTo(self, p2, origin=None):
         if origin is None:
             return p2.theta - self.theta
         else:
             assert False, 'TODO'
+    def distanceTo(self, p2):
+        r1, t1 = self.hr, self.theta
+        r2, t2 = p2.hr, p2.theta
+        d = math.acosh(math.cosh(r1)*math.cosh(r2)
+                       - math.sinh(r1)*math.sinh(r2)*math.cos(t2-t1))
+        return d
     @staticmethod
     def fromEuclid(x, y):
         r = math.hypot(x, y)
@@ -55,6 +63,8 @@ class Point:
         r = math.tanh(hr/2)
         x, y = r*math.cos(theta), r*math.sin(theta)
         return Point(x, y, hr=hr, theta=theta)
+    def __eq__(self, other):
+        return util.nearZero(self.x - other.x) and util.nearZero(self.y - other.y)
     def __repr__(self):
         return '{}({}, {})'.format(type(self).__name__,
                     round(self.x, 3), round(self.y, 3))
@@ -74,6 +84,8 @@ class Ideal(Point):
     @property
     def y(self):
         return math.sin(self.theta)
+    def isIdeal(self):
+        return True
     @classmethod
     def fromDegree(cls, deg):
         return cls(math.radians(deg))

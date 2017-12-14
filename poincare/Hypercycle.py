@@ -48,9 +48,9 @@ class Hypercycle:
         self.projShape = projShape
         self.segment = segment
     def startPoint(self):
-        return self.projShape.startPoint()
+        return Point(*self.projShape.startPoint())
     def endPoint(self):
-        return self.projShape.endPoint()
+        return Point(*self.projShape.endPoint())
     def intersectionsWithHcycle(self, hcycle2):
         ''' Returns list of intersections in the unit circle '''
         x2, y2 = 1, 1  # Default, invalid
@@ -89,20 +89,53 @@ class Hypercycle:
             hypercycle) '''
         trimmedShape = self.projShape.trimmed(x1, y1, x2, y2, **kwargs)
         return type(self)(trimmedShape, segment=True)
+    def midpointEuclid(self):
+        x, y = self.projShape.midpoint()
+        return Point(x, y)
+    def reverse(self):
+        self.projShape.reverse()
+    def reversed(self):
+        newShape = self.projShape.reversed()
+        newObj = type(self)(newShape, segment=True)
+        newObj.segment = self.segment
+        return newObj
     def makePerpendicular(self, x, y):
-        radical1 = ELine.radicalAxis(Circle(0,0,1), (x,y))
+        if util.nearZero(x) and util.nearZero(y):
+            radical1 = None
+        else:
+            radical1 = ELine.radicalAxis(Circle(0,0,1), (x,y))
         radical2 = ELine.radicalAxis(self.projShape, (x,y))
-        if radical1.parallelTo(radical2):
+        if radical1 is None or radical1.parallelTo(radical2):
             # Infinite radius circle
             shape = radical2.makePerpendicular(x,y)
-            # TODO: Ensure correct direction
+            # Ensure correct direction
+            if isinstance(self.projShape, ELine):
+                if shape.antiparallelTo(self.projShape):
+                    shape.reverse()
+            else:  # projShape is a Circle
+                radial = ELine.fromPoints(x, y, self.projShape.cx, self.projShape.cy)
+                if radial.antiparallelTo(shape) ^ self.projShape.cw:
+                    shape.reverse()
             return poincare.Line(shape, segment=False)
         else:
             cx, cy = intersection.lineLine(radical1, radical2)
             r = math.hypot(cy-y, cx-x)
             shape = Circle(cx, cy, r)
-            # TODO: Ensure correct direction
+            # Ensure correct direction
+            shape.cw = False
+            if isinstance(self.projShape, ELine):
+                x1, y1, x2, y2 = intersection.lineCircle(self.projShape, shape)
+            else:  # projShape is a Circle
+                x1, y1, x2, y2 = intersection.circleCircle(self.projShape, shape)
+                shape.cw = shape.cw ^ self.projShape.cw
+            if math.hypot(x1, y1) <= math.hypot(x2, y2):
+                shape.cw = not shape.cw
             return poincare.Line(shape, segment=False)
+    def makeCap(self, point):
+        if point.isIdeal():
+            return point
+        else:
+            return self.makePerpendicular(*point)
     def makeOffset(self, offset):
         return Hypercycle.fromHypercycleOffset(self, offset)
     @classmethod
@@ -179,18 +212,10 @@ class Hypercycle:
             if self.segment:
                 edges = []
                 edges.append(self.makeOffset(hwidth1))
-                x1, y1 = self.startPoint()
-                if util.nearZero(math.hypot(x1, y1) - 1):
-                    edges.append(Point(x1, y1))
-                else:
-                    edges.append(self.makePerpendicular(x1, y1))
+                edges.append(self.makeCap(self.startPoint()))
                 edges.append(self.makeOffset(hwidth2))
-                x2, y2 = self.endPoint()
-                if util.nearZero(math.hypot(x2, y2) - 1):
-                    edges.append(Point(x2, y2))
-                else:
-                    edges.append(self.makePerpendicular(x2, y2))
-                poly = poincare.Polygon(edges, join=True)
+                edges.append(self.makeCap(self.endPoint()))
+                poly = poincare.Polygon.fromEdges(edges, join=True)
                 return poly.toDrawables(elements, **kwargs)
             else:
                 edge1 = Hypercycle.fromHypercycleOffset(self, hwidth1).projShape
