@@ -24,6 +24,16 @@ class Arc(Circle):
         x = self.r * math.cos(math.radians(self.endDeg))
         y = self.r * math.sin(math.radians(self.endDeg))
         return self.cx+x, self.cy+y
+    def midDegree(self):
+        if self.cw:
+            startDeg, endDeg = self.endDeg, self.startDeg
+        else:
+            startDeg, endDeg = self.startDeg, self.endDeg
+        diffDeg = (endDeg - startDeg) % 360
+        return (startDeg + diffDeg/2) % 360
+    def midpoint(self):
+        ang = math.radians(self.midDegree())
+        return self.cx + self.r * math.cos(ang), self.cy + self.r * math.sin(ang)
     def reverse(self):
         self.startDeg, self.endDeg = self.endDeg, self.startDeg
         self.cw = not self.cw

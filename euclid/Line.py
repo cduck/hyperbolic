@@ -37,6 +37,8 @@ class Line:
     def trimmed(self, x1, y1, x2, y2, **kwargs):
         ''' Assumes that the given points are on the line '''
         return Line(x1, y1, x2, y2)
+    def midpoint(self):
+        return (self.x1 + self.x2)/2, (self.y1 + self.y2)/2
     def makePerpendicular(self, x, y, length=1):
         ''' Return a line through (x,y), rotated 90deg CCW from self '''
         x1, y1, x2, y2 = self.x1, self.y1, self.x2, self.y2
