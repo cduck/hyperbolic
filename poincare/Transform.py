@@ -37,7 +37,7 @@ class Transform:
                 f = self.applyToTuple
         return [f(p) for p in points]
     def __call__(self, *points, verify=False):
-        self.applyToList(points, verify=verify)
+        return self.applyToList(points, verify=verify)
     def inverted(self):
         a,b,c,d = self.abcd
         return Transform(-d,b,c,-a)
