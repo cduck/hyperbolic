@@ -3,6 +3,7 @@ import math
 
 from .. import util
 from ..euclid.shapes import Circle as ECircle
+from .. import poincare as module
 from . import shapes
 
 
@@ -37,6 +38,10 @@ class Point:
         d = math.acosh(math.cosh(r1)*math.cosh(r2)
                        - math.sinh(r1)*math.sinh(r2)*math.cos(t2-t1))
         return d
+    def midpointWith(self, p2, frac=0.5):
+        d = self.distanceTo(p2)
+        pMid = Point.fromHPolar(d*frac, 0)
+        return module.Transform.translation(self, p2).applyToPoint(pMid)
     @staticmethod
     def fromEuclid(x, y):
         r = math.hypot(x, y)
