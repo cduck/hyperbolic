@@ -1,5 +1,5 @@
 
-from .shapes import Point, Line
+from .shapes import Point, Line, Hypercycle
 
 
 class Polygon:
@@ -56,6 +56,29 @@ class Polygon:
     @staticmethod
     def fromVertices(vertices):
         return Polygon(vertices=vertices)
+    def makeRestorePoints(self):
+        ''' Returns a list of points that can be used to recreate the polygon.
+            This can be used to transform the polygon.  Recreate it with
+            Polygon.fromRestorePoints(points). '''
+        points = []
+        for vert, edge in zip(self.vertices, self.edges):
+            if isinstance(edge, Point):
+                continue
+            points.append(vert)
+            points.append(edge.midpointEuclid())
+        return points
+    @staticmethod
+    def fromRestorePoints(points):
+        n = len(points)//2
+        verts = []
+        edges = []
+        for i in range(n):
+            verts.append(points[i*2])
+            edge = Hypercycle.fromPoints(*points[i*2], *points[(i*2+2)%(n*2)],
+                                         *points[i*2+1], segment=True,
+                                         excludeMid=False)
+            edges.append(edge)
+        return Polygon(edges=edges, vertices=verts, join=False)
     def toDrawables(self, elements, hwidth=None, **kwargs):
         if hwidth is None:
             path = elements.Path(**kwargs)
@@ -69,18 +92,6 @@ class Polygon:
                 hwidth = float(hwidth)
                 hwidth1, hwidth2 = -hwidth/2, hwidth/2
             path = elements.Path(**kwargs)
-            #outerEdges = [  # Maybe outer, maybe inner
-            #    edge.makeOffset(hwidth1)
-            #    for edge in self.edges
-            #    if not isinstance(edge, Point)
-            #]
-            #innerEdges = [  # Maybe outer, maybe inner
-            #    edge.makeOffset(hwidth2)
-            #    for edge in reversed(self.edges)
-            #    if not isinstance(edge, Point)
-            #]
-            #outerPoly = Polygon(outerEdges, join=True)
-            #innerPoly = Polygon(innerEdges, join=True)
             outerPoly = self.offsetPolygon(hwidth1, reverseOrder=False)
             innerPoly = self.offsetPolygon(hwidth2, reverseOrder=True)
             outerPoly.drawToPath(path, includeM=True, includeL=False, **kwargs)
