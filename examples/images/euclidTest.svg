@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="400" height="399.99999999999994" viewBox="-2.05 -2.05 4.1 4.1">
+<defs>
+</defs>
+<circle cx="0" cy="0" r="1" fill="silver" />
+<circle cx="-1" cy="1" r="1.8284271247461903" stroke="red" stroke-width="0.02" fill="none" />
+<circle cx="1" cy="-1" r="1" stroke="red" stroke-width="0.02" fill="none" />
+<path d="M2,-2 L-1,0" stroke="red" stroke-width="0.02" fill="none" />
+<path d="M-2,0 L2,-1" stroke="red" stroke-width="0.02" fill="none" />
+<circle cx="0.29289321881345254" cy="-0.29289321881345254" r="0.04" fill="black" />
+<circle cx="0.29289321881345254" cy="-0.29289321881345254" r="0.04" fill="green" />
+<circle cx="1.6455619111856357" cy="-1.763707940790424" r="0.04" fill="black" />
+<circle cx="0.04674578112205652" cy="-0.697830520748038" r="0.04" fill="green" />
+<circle cx="-0.40000000000000036" cy="-0.3999999999999999" r="0.04" fill="black" />
+</svg>
