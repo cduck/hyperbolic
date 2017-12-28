@@ -27,7 +27,6 @@ class Polygon:
             for i in range(len(vertices)):
                 startP, endP = vertices[i], vertices[(i+1)%len(vertices)]
                 edges[i] = Line.fromPoints(*startP, *endP, segment=True)
-                #edges[i] = edges[i].trimmed(*startP, *endP, chooseShorter=True)
         if join:
             edges = list(edges)
             for i, edge in enumerate(edges):
