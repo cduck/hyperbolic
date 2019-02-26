@@ -18,3 +18,12 @@ def triangleSideForAngles(adj1, adj2, opposite):
                    (math.sin(A)*math.sin(B)))
     return c
 
+def triangleAngleOppositeSide(adj1, adj2, oppositeLen):
+    ''' Uses the hyperbolic law of cosines, solved for the angle opposite the
+        given side
+
+        Input angles in radians '''
+    c, A, B = oppositeLen, adj1, adj2
+    C = math.acos(math.cosh(c)*math.sin(A)*math.sin(B) -
+                  math.cos(A)*math.cos(B))
+    return C
