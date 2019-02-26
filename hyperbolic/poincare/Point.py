@@ -16,7 +16,10 @@ class Point:
             theta = math.atan2(y, x)
         if hr is None:
             r = math.hypot(x, y)
-            hr = 2 * math.atanh(r)
+            if self.isIdeal():
+                hr = float('inf')
+            else:
+                hr = 2 * math.atanh(r)
         self.theta = theta
         self.hr = hr
     def __iter__(self):
