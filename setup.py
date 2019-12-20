@@ -10,7 +10,7 @@ except:
 setup(
     name = 'hyperbolic',
     packages = find_packages(),
-    version = '1.0.0',
+    version = '1.1',
     description = 'This is a Python 3 library for generating hyperbolic geometry and drawing it with the drawSvg library.  Currently only the Poincaré disk model is supported.',
     long_description = longDesc,
     author = 'Casey Duckering',
