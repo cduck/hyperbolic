@@ -21,6 +21,8 @@ class Line:
         return Line(self.x2, self.y2, self.x1, self.y1)
     def atan2(self):
         return math.atan2(self.y2-self.y1, self.x2-self.x1)
+    def length(self):
+        return ((self.x2 - self.x1)**2 + (self.y2 - self.y1)**2) ** 0.5
     def parallelTo(self, line2):
         return util.nearZero(math.pi/2 -
                 (self.atan2() - line2.atan2() + math.pi/2) % math.pi)
@@ -59,6 +61,9 @@ class Line:
             px2 = 2*px1 - px2
             py2 = 2*py1 - py2
         return Line(x1+px1, y1+py1, x1+px2, y1+py2)
+    def makeParallel(self, x, y, length=1):
+        perp = self.makePerpendicular(x, y)
+        return perp.makePerpendicular(x, y, length)
     @staticmethod
     def fromPoints(x1, y1, x2, y2, **kwargs):
         return Line(x1, y1, x2, y2, **kwargs)
