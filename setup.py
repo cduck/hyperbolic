@@ -4,7 +4,7 @@ logger = logging.getLogger(__name__)
 
 name = 'hyperbolic'
 package_name = name
-version = '1.1'
+version = '1.2.0'
 
 try:
     with open('README.md', 'r') as f:
