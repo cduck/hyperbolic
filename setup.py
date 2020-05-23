@@ -1,23 +1,30 @@
 from setuptools import setup, find_packages
+import logging
+logger = logging.getLogger(__name__)
+
+name = 'hyperbolic'
+package_name = name
+version = '1.1'
 
 try:
-    with open('DESCRIPTION.rst', 'r') as f:
-        longDesc = f.read()
+    with open('README.md', 'r') as f:
+        long_desc = f.read()
 except:
-    print('Warning: Could not open DESCRIPTION.rst.  long_description will be set to None.')
-    longDesc = None
+    logger.warning('Could not open README.md.  long_description will be set to None.')
+    long_desc = None
 
 setup(
-    name = 'hyperbolic',
+    name = package_name,
     packages = find_packages(),
-    version = '1.1',
-    description = 'This is a Python 3 library for generating hyperbolic geometry and drawing it with the drawSvg library.  Currently only the Poincaré disk model is supported.',
-    long_description = longDesc,
+    version = version,
+    description = 'A Python 3 library for constructing and drawing hyperbolic geometry',
+    long_description = long_desc,
+    long_description_content_type = 'text/markdown',
     author = 'Casey Duckering',
     #author_email = '',
-    url = 'https://github.com/cduck/hyperbolic',
-    download_url = 'https://github.com/cduck/hyperbolic/archive/1.0.0.tar.gz',
-    keywords = ['hyperbolic', 'geometry', 'draw'],
+    url = f'https://github.com/cduck/{name}',
+    download_url = f'https://github.com/cduck/{name}/archive/{version}.tar.gz',
+    keywords = ['hyperbolic', 'geometry', 'draw', 'SVG'],
     classifiers = [
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3',
@@ -26,4 +33,3 @@ setup(
         'numpy',
     ],
 )
-

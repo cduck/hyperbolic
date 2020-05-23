@@ -1,16 +1,14 @@
 # hyperbolic
 
-This is a Python 3 library for generating hyperbolic geometry and drawing it with the drawSvg library.  Currently only the Poincaré disk model is supported.
+This is a Python 3 library for generating hyperbolic geometry and drawing it with the [drawSvg](https://github.com/cduck/drawSvg) library.  Currently the Poincaré disk and half-plane models are supported.
 
 # Install
 hyperbolic is available on PyPI:
-
 ```
 $ pip3 install hyperbolic
 ```
 
 Install drawSvg also to display the hyperbolic geometry:
-
 ```
 $ pip3 install drawSvg
 ```
@@ -20,8 +18,8 @@ $ pip3 install drawSvg
 See the iPython notebooks in [examples](https://github.com/cduck/hyperbolic/tree/master/examples):
 
 - [Euclidean geometry](https://github.com/cduck/hyperbolic/blob/master/examples/euclid.ipynb)
-- [Poincaré disk model](https://github.com/cduck/hyperbolic/blob/master/examples/poincare.ipynb)
-- [Tiling the Poincaré disk](https://github.com/cduck/hyperbolic/blob/master/examples/tiles.ipynb)
+- [Poincaré disk and plane](https://github.com/cduck/hyperbolic/blob/master/examples/poincare.ipynb)
+- [Tiling the Poincaré disk and plane](https://github.com/cduck/hyperbolic/blob/master/examples/tiles.ipynb)
 
 Using this library, along with the drawSvg library, you can create art like this hyperbolic weave:
 
