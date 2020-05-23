@@ -1,8 +1,11 @@
 
 import math, cmath
+import numpy as np
 
 from .. import util
 from .shapes import Point, Ideal
+from ..euclid.shapes import Circle, Arc, Line
+from ..euclid import intersection
 
 
 class Transform:
@@ -19,7 +22,12 @@ class Transform:
         if self.conj:
             z = z.conjugate()
         a,b,c,d = self.abcd
-        zt = (a*z + b) / (c*z + d)
+        numer = a*z + b
+        denom = c*z + d
+        if util.nearZero(abs(denom)):
+            zt = numer * 1e5
+        else:
+            zt = numer / denom
         return zt.real, zt.imag
     def applyToPoint(self, point):
         return Point(*self.applyToTuple(point))
@@ -40,6 +48,34 @@ class Transform:
             else:
                 f = self.applyToTuple
         return [f(p) for p in points]
+    def applyToShape(self, shape):
+        ''' Supports Euclidean Circle, Arc, and Line. '''
+        if isinstance(shape, (Arc, Line)):
+            closed = False
+            p1 = shape.startPoint()
+            p2 = shape.midpoint()
+            p3 = shape.endPoint()
+        elif isinstance(shape, Circle):
+            closed = True
+            p1 = shape.cx+shape.r, shape.cy
+            p2 = shape.cx, shape.cy+shape.r
+            p3 = shape.cx-shape.r, shape.cy
+            if shape.cw:
+                p1, p3 = p3, p1
+        else:
+            raise TypeError('Unsupported shape: {}'.format(shape))
+        # Transform
+        p1, p2, p3 = self.applyToList((p1, p2, p3))
+        # Create shape
+        try:
+            # See if it is an arc or circle
+            out = Arc.fromPoints(*p1, *p3, *p2)
+            if closed:  # It's a circle
+                out = Circle(out.cx, out.cy, out.r, cw=out.cw)
+            return out
+        except (intersection.InfiniteIntersections, np.linalg.LinAlgError):
+            # It is a line
+            return Line(*p1, *p3)
     def __call__(self, *points, verify=False):
         return self.applyToList(points, verify=verify)
     def inverted(self):
@@ -97,3 +133,9 @@ class Transform:
         transShift = Transform.shiftOrigin(p1, p2)
         return Transform.merge(transShift.conjugate(), transShift.inverted())
 
+    @staticmethod
+    def diskToHalf():
+        return Transform(1j, -1, -1, 1j)
+    @staticmethod
+    def halfToDisk():
+        return Transform.diskToHalf().inverted()

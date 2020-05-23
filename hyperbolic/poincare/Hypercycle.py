@@ -202,7 +202,7 @@ class Hypercycle:
             shape = Arc.fromPoints(sx, sy, ex, ey, mx, my,
                                    excludeMid=excludeMid)
         return cls(shape, segment=segment, **kwargs)
-    def toDrawables(self, elements, hwidth=None, **kwargs):
+    def toDrawables(self, elements, hwidth=None, transform=None, **kwargs):
         if hwidth is not None:
             try:
                 hwidth1, hwidth2 = hwidth
@@ -216,18 +216,27 @@ class Hypercycle:
                 edges.append(self.makeOffset(hwidth2))
                 edges.append(self.makeCap(self.endPoint()))
                 poly = poincare.Polygon.fromEdges(edges, join=True)
-                return poly.toDrawables(elements, **kwargs)
+                return poly.toDrawables(elements, transform=transform, **kwargs)
             else:
                 edge1 = Hypercycle.fromHypercycleOffset(self, hwidth1).projShape
                 edge2 = Hypercycle.fromHypercycleOffset(self, hwidth2).projShape
                 edge2.reverse()
                 path = elements.Path(**kwargs)
+                if transform:
+                    edge1 = transform.applyToShape(edge1)
+                    edge2 = transform.applyToShape(edge2)
                 edge1.drawToPath(path, includeM=True)
-                edge2.drawToPath(path, includeM=False)#, includeL=True)
+                edge2.drawToPath(path, includeM=False)
                 path.Z()
                 return (path,)
         else:
-            return self.projShape.toDrawables(elements, **kwargs)
-    def drawToPath(self, path, **kwargs):
-        return self.projShape.drawToPath(path, **kwargs)
+            shape = self.projShape
+            if transform:
+                shape = transform.applyToShape(shape)
+            return shape.toDrawables(elements, **kwargs)
+    def drawToPath(self, path, transform=None, **kwargs):
+        shape = self.projShape
+        if transform:
+            shape = transform.applyToShape(shape)
+        return shape.drawToPath(path, **kwargs)
 

@@ -45,9 +45,12 @@ class Horocycle:
     def fromClosestPointEPolar(cls, er, theta, cw=False):
         p = Point.fromPolarEuclid(er, theta)
         return cls.fromClosestPoint(p, surroundOrigin=er<0, cw=cw)
-    def toDrawables(self, elements, hwidth=None, **kwargs):
+    def toDrawables(self, elements, hwidth=None, transform=None, **kwargs):
         if hwidth is None:
-            return self.projShape.toDrawables(elements, **kwargs)
+            shape = self.projShape
+            if transform:
+                shape = transform.applyToShape(shape)
+            return shape.toDrawables(elements, **kwargs)
         else:
             try:
                 hwidth1, hwidth2 = hwidth
@@ -69,8 +72,10 @@ class Horocycle:
             circInner = Horocycle.fromClosestPointHPolar(prInner, theta, cw=False).projShape
             circOuter = Horocycle.fromClosestPointHPolar(prOuter, theta, cw=True).projShape
             path = elements.Path(**kwargs)
+            if transform:
+                circInner = transform.applyToShape(circInner)
+                circOuter = transform.applyToShape(circOuter)
             circInner.drawToPath(path, includeM=True)
             circOuter.drawToPath(path, includeM=False, includeL=True)
             path.Z()
             return (path,)
-

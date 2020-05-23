@@ -78,10 +78,11 @@ class Polygon:
                                          excludeMid=False)
             edges.append(edge)
         return Polygon(edges=edges, vertices=verts, join=False)
-    def toDrawables(self, elements, hwidth=None, **kwargs):
+    def toDrawables(self, elements, hwidth=None, transform=None, **kwargs):
         if hwidth is None:
             path = elements.Path(**kwargs)
-            self.drawToPath(path, includeM=True, includeL=False, **kwargs)
+            self.drawToPath(path, includeM=True, includeL=False,
+                            transform=transform, **kwargs)
             path.Z()
             return (path,)
         else:
@@ -93,14 +94,17 @@ class Polygon:
             path = elements.Path(**kwargs)
             outerPoly = self.offsetPolygon(hwidth1, reverseOrder=False)
             innerPoly = self.offsetPolygon(hwidth2, reverseOrder=True)
-            outerPoly.drawToPath(path, includeM=True, includeL=False, **kwargs)
-            innerPoly.drawToPath(path, includeM=False, includeL=True, **kwargs)
+            outerPoly.drawToPath(path, includeM=True, includeL=False,
+                                 transform=transform, **kwargs)
+            innerPoly.drawToPath(path, includeM=False, includeL=True,
+                                 transform=transform, **kwargs)
             path.Z()
             return (path,)
-    def drawToPath(self, path, includeM=True, includeL=False, **kwargs):
+    def drawToPath(self, path, includeM=True, includeL=False, transform=None,
+                   **kwargs):
         for i, edge in enumerate(self.edges):
             if isinstance(edge, Point):
                 continue
             edge.drawToPath(path, includeM=includeM and i==0,
-                            includeL=includeL and i==0)
+                            includeL=includeL and i==0, transform=transform)
 

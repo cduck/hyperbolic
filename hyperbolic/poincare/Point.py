@@ -76,12 +76,16 @@ class Point:
     def __repr__(self):
         return '{}({}, {})'.format(type(self).__name__,
                     round(self.x, 3), round(self.y, 3))
-    def toDrawables(self, elements, radius=0, hradius=None, **kwargs):
+    def toDrawables(self, elements, radius=0, hradius=None, transform=None,
+                    **kwargs):
         if hradius is not None and not isinstance(self, Ideal):
             shape = shapes.Circle.fromCenterRadius(Point(self.x, self.y), hradius)
-            return shape.toDrawables(elements, **kwargs)
+            return shape.toDrawables(elements, transform=transform, **kwargs)
         else:
-            return ECircle(self.x, self.y, radius).toDrawables(elements, **kwargs)
+            x, y = self.x, self.y
+            if transform:
+                x, y = transform.applyToTuple((x, y))
+            return ECircle(x, y, radius).toDrawables(elements, **kwargs)
 
 class Ideal(Point):
     def __init__(self, theta):

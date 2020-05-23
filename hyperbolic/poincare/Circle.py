@@ -42,9 +42,13 @@ class Circle:
         y = ecr * math.sin(point.theta)
         shape = ECircle(x, y, er, cw=cw)
         return Circle(shape, center=point, r=radius)
-    def toDrawables(self, elements, hwidth=None, positiveRadius=False, **kwargs):
+    def toDrawables(self, elements, hwidth=None, positiveRadius=False,
+                    transform=None, **kwargs):
         if hwidth is None:
-            return self.projShape.toDrawables(elements, **kwargs)
+            shape = self.projShape
+            if transform:
+                shape = transform.applyToShape(shape)
+            return shape.toDrawables(elements, **kwargs)
         else:
             try:
                 hwidth1, hwidth2 = hwidth
@@ -59,13 +63,21 @@ class Circle:
                 rInner, rOuter = rOuter, rInner
             if positiveRadius:
                 if rInner <= 0 and rOuter <= 0:
-                    return ECircle(self.projShape.cx, self.projShape.cy, 0)
+                    x, y = self.projShape.cx, self.projShape.cy
+                    if transform:
+                        x, y = transform.applyToTuple((x, y))
+                    return ECircle(x, y, 0).toDrawables(elements, **kwargs)
                 if rInner <= 0:
                     circOuter = Circle.fromCenterRadius(self.center, rOuter).projShape
+                    if transform:
+                        circOuter = transform.applyToShape(circOuter)
                     return circOuter.toDrawables(elements, **kwargs)
             circInner = Circle.fromCenterRadius(self.center, rInner, cw=False).projShape
             circOuter = Circle.fromCenterRadius(self.center, rOuter, cw=True).projShape
             path = elements.Path(**kwargs)
+            if transform:
+                circInner = transform.applyToShape(circInner)
+                circOuter = transform.applyToShape(circOuter)
             circInner.drawToPath(path, includeM=True)
             circOuter.drawToPath(path, includeM=False, includeL=True)
             path.Z()
