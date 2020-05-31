@@ -22,6 +22,20 @@ class Ellipse:
         x, y = s*np.cos(np.deg2rad(deg)), s*np.sin(np.deg2rad(deg))
         return x+self.cx, y+self.cy
 
+    def semiMajorLine(self):
+        ''' Assumes rx is the semi-major axis and ry is minor '''
+        rot = self.rot
+        x = self.cx + self.rx * np.cos(rot)
+        y = self.cy + self.rx * np.sin(rot)
+        return shapes.Line.fromPoints(self.cx, self.cy, x, y)
+
+    def semiMinorLine(self):
+        ''' Assumes rx is the semi-major axis and ry is minor '''
+        rot = self.rot
+        x = self.cx + self.ry * -np.sin(rot)
+        y = self.cy + self.ry * np.cos(rot)
+        return shapes.Line.fromPoints(self.cx, self.cy, x, y)
+
     @staticmethod
     def fromFoci(x1, y1, x2, y2, rx):
         centerLine = shapes.Line.fromPoints(x1, y1, x2, y2)
