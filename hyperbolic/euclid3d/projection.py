@@ -135,6 +135,20 @@ class LinearProjection(Projection):
         mat[[i, i, j, j], [i, j, i, j]] = c, -s, s, c
         return LinearProjection(mat)
 
+    @staticmethod
+    def rotation3d(vector, rads):
+        # Equation from
+        # https://en.wikipedia.org/wiki/Rotation_matrix#Rotation_matrix_from_axis_and_angle
+        c, s = np.cos(rads), np.sin(rads)
+        vector = np.array(vector, dtype=dtype)
+        x, y, z = vector / np.linalg.norm(vector)
+        mat = np.array([
+            [c+x*x*(1-c), x*y*(1-c)-z*s, x*z*(1-c)+y*s],
+            [y*x*(1-c)+z*s, c+y*y*(1-c), y*z*(1-c)-x*s],
+            [z*x*(1-c)-y*s, z*y*(1-c)+x*s, c+z*z*(1-c)],
+        ], dtype=dtype)
+        return LinearProjection(mat)
+
     def __matmul__(self, right):
         if type(self) != type(right):
             return NotImplemented
@@ -228,6 +242,8 @@ translation = LinearProjection.translation
 scaling = LinearProjection.scaling
 
 rotation = LinearProjection.rotation
+
+rotation3d = LinearProjection.rotation3d
 
 def axis_swap(permutation, scale=None):
     size = len(permutation)

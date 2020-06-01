@@ -13,6 +13,7 @@ from .projection import (
     scaling,
     translation,
     rotation,
+    rotation3d,
     axis_swap,
     axonometric3d,
     isometric3d,
