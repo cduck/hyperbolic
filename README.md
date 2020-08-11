@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3978772.svg)](https://doi.org/10.5281/zenodo.3978772)
+
 # hyperbolic
 
 This is a Python 3 library for generating hyperbolic geometry and drawing it with the [drawSvg](https://github.com/cduck/drawSvg) library.  Currently the Poincaré disk and half-plane models are supported.
