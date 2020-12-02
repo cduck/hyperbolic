@@ -22,12 +22,13 @@ See the iPython notebooks in [examples](https://github.com/cduck/hyperbolic/tree
 - [Euclidean geometry](https://github.com/cduck/hyperbolic/blob/master/examples/euclid.ipynb)
 - [Poincaré disk and plane](https://github.com/cduck/hyperbolic/blob/master/examples/poincare.ipynb)
 - [Tiling the Poincaré disk and plane](https://github.com/cduck/hyperbolic/blob/master/examples/tiles.ipynb)
+- [Tiling of isosceles triangles](https://github.com/cduck/hyperbolic/blob/master/examples/isosceles-tiling.ipynb)
 
 Using this library, along with the drawSvg library, you can create art like this hyperbolic weave:
 
 ![Hyperbolic weave](https://github.com/cduck/hyperbolic/raw/master/examples/images/weave.png)
 
-This weave is built from a tiling of isosceles triangles:
+This weave is built from a tiling of [isosceles triangles](https://github.com/cduck/hyperbolic/blob/master/examples/isosceles-tiling.ipynb):
 
 ![Hyperbolic weave structure](https://github.com/cduck/hyperbolic/raw/master/examples/images/weaveStructure.png)
 
