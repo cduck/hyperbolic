@@ -21,7 +21,7 @@ class Circle:
             r = (dh2 - dh1) / 2
         if center is None:
             cr = (dh2 + dh1) / 2
-            theta = math.atan2(projShape.cx, projShape.cy)
+            theta = math.atan2(projShape.cy, projShape.cx)
             center = Point.fromHPolar(cr, theta)
         self.r = r
         self.center = center
