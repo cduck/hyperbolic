@@ -130,8 +130,11 @@ class Transform:
     def mirror(p1=None, p2=(0,0)):
         if p1 is None:
             p1, p2 = p2, (1,0)
-        transShift = Transform.shiftOrigin(p1, p2)
-        return Transform.merge(transShift.conjugate(), transShift.inverted())
+        z1, z2 = complex(*p1), complex(*p2)
+        z1c, z2c = z1.conjugate(), z2.conjugate()
+        a = z1*z2*z1c - z1*z2*z2c - z1 + z2
+        b = z1*z2c - z2*z1c
+        return Transform(a, b, -b, a.conjugate(), conj=True)
 
     @staticmethod
     def diskToHalf():
