@@ -6,3 +6,4 @@ from .horocycle import Horocycle
 from .circle import Circle
 from .polygon import Polygon
 from .transform import Transform
+from .transform_to_klein import TransformToKlein
