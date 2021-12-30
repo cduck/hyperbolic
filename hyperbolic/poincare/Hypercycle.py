@@ -89,7 +89,7 @@ class Hypercycle:
         pts=self.intersectionsWithHcycle(hcycle2)
         for i,p in enumerate(pts):
             if self.isPointOnSegment(p.x, p.y) and hcycle2.isPointOnSegment(p.x, p.y):
-                pass
+                continue
             else:
                 pts = pts[:i] + pts[i+1:]
         return pts
