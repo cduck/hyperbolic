@@ -40,6 +40,16 @@ class Arc(Circle):
     def reversed(self):
         return Arc(self.cx, self.cy, self.r, self.endDeg, self.startDeg,
                    cw=not self.cw)
+    def isPointOnSegment(self, x, y):
+        px = x-self.cx
+        py = y-self.cy
+        pDeg = math.degrees(math.atan2(py, px))
+        if not self.cw:
+            res = self.startDeg<=pDeg and pDeg<=self.endDeg
+            return res
+        else:
+            res = self.startDeg>=pDeg and pDeg>=self.endDeg
+            return res
     @classmethod
     def fromPoints(cls, sx, sy, ex, ey, mx, my, excludeMid=False, **kwargs):
         cx, cy, rad = cls._centerRadFromPoints(sx, sy, ex, ey, mx, my)
