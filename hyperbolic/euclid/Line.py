@@ -68,7 +68,7 @@ class Line:
         ''' Assumes that the given point is on the line '''
         K1=(self.x1-x)*(self.x1-self.x2)+(self.y1-y)*(self.y1-self.y2)      #dot product of vector startPoint->(x,y) and startpoint->endPoint->(x,y)
         K2=(self.x2-x)*(self.x2-self.x1)+(self.y2-y)*(self.y2-self.y1)      #dot product of vector endPoint->(x,y) and endpoint->startPoint->(x,y)
-        if K1>=0 and K2>=0:                                                 #do we need > ?
+        if K1>=0 and K2>=0:
             return True
         else:
             return False
