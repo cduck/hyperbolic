@@ -84,14 +84,14 @@ class Hypercycle:
         except ValueError: pass
         return pts
     def isPointOnSegment(self, x, y):
-        return self.projShape.isPointonSegment(x, y)
+        return self.projShape.isPointOnSegment(x, y)
     def segmentIntersectionsWithHcycle(self, hcycle2):
         pts=self.intersectionsWithHcycle(hcycle2)
         for i,p in enumerate(pts):
-            if self.isPointonSegment(p.x, p.y) and hcycle2.isPointonSegment(p.x, p.y):
+            if self.isPointOnSegment(p.x, p.y) and hcycle2.isPointOnSegment(p.x, p.y):
                 pass
             else:
-                pts=pts[:i]+pts[i+1:]
+                pts = pts[:i] + pts[i+1:]
         return pts
     def trimmed(self, x1, y1, x2, y2, **kwargs):
         ''' Returns a segment of this hypercycle going from x1,y1
