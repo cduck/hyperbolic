@@ -41,6 +41,7 @@ class Arc(Circle):
         return Arc(self.cx, self.cy, self.r, self.endDeg, self.startDeg,
                    cw=not self.cw)
     def isPointOnSegment(self, x, y):
+        '''Assumes that Point is on the circle'''
         px = x-self.cx
         py = y-self.cy
         pDeg = math.degrees(math.atan2(py, px))
