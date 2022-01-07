@@ -87,12 +87,13 @@ class Hypercycle:
         return self.projShape.isPointOnSegment(x, y)
     def segmentIntersectionsWithHcycle(self, hcycle2):
         pts=self.intersectionsWithHcycle(hcycle2)
-        for i, p in enumerate(self.intersectionsWithHcycle(hcycle2)):
-            if self.isPointOnSegment(*p) and hcycle2.isPointOnSegment(*p):
-                continue
-            else:
-                pts=pts.pop(i)
-        return pts
+        valid = [
+            p
+            for p in pts
+            if (self.isPointOnSegment(*p)
+                and hcycle2.isPointOnSegment(*p))
+        ]
+        return valid
     def trimmed(self, x1, y1, x2, y2, **kwargs):
         ''' Returns a segment of this hypercycle going from x1,y1
             to x2,y2 (assuming that x1,y1 and x2,y2 are on the

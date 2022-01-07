@@ -41,16 +41,22 @@ class Arc(Circle):
         return Arc(self.cx, self.cy, self.r, self.endDeg, self.startDeg,
                    cw=not self.cw)
     def isPointOnSegment(self, x, y):
-        '''Assumes that Point is on the circle'''
+        '''Assumes that the given point is on the circle and returns True if on this arc'''
+        startDeg, endDeg = self.startDeg%360, self.endDeg%360
         px = x-self.cx
         py = y-self.cy
-        pDeg = math.degrees(math.atan2(py, px))
-        if not self.cw:
-            res = self.startDeg<=pDeg and pDeg<=self.endDeg
-            return res
+        pDeg = math.degrees(math.atan2(py, px))%360
+        if util.nearZero(pDeg-startDeg) or util.nearZero(pDeg-endDeg):
+            return True
+        if self.cw:
+            startDeg, endDeg = endDeg, startDeg
         else:
-            res = self.startDeg>=pDeg and pDeg>=self.endDeg
-            return res
+            startDeg, endDeg = startDeg, endDeg
+        if startDeg<endDeg:
+            res = startDeg<=pDeg<=endDeg
+        else:
+            res = (endDeg<=pDeg) ^ (pDeg<=startDeg)
+        return res
     @classmethod
     def fromPoints(cls, sx, sy, ex, ey, mx, my, excludeMid=False, **kwargs):
         cx, cy, rad = cls._centerRadFromPoints(sx, sy, ex, ey, mx, my)
