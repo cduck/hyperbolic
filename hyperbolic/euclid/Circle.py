@@ -29,7 +29,7 @@ class Circle:
             cw = None
         return Circle(self.cx, self.cy, self.r, cw=cw)
     def isPointOnSegment(self, x, y):
-        ''' Assumes that the given point is on the circle and always returns True'''
+        ''' Assumes that the given point is on the circle and always returns True '''
         return True
     def trimmed(self, x1, y1, x2, y2, cw=None, chooseShorter=None, **kwargs):
         ''' Assumes that the given points are on the circle

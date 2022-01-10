@@ -86,10 +86,10 @@ class Hypercycle:
     def isPointOnSegment(self, x, y):
         return self.projShape.isPointOnSegment(x, y)
     def segmentIntersectionsWithHcycle(self, hcycle2):
-        pts=self.intersectionsWithHcycle(hcycle2)
+        ''' Returns list of intersections on the segment '''
         valid = [
             p
-            for p in pts
+            for p in self.intersectionsWithHcycle(hcycle2)
             if (self.isPointOnSegment(*p)
                 and hcycle2.isPointOnSegment(*p))
         ]
