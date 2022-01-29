@@ -45,8 +45,6 @@ class Arc(Circle):
         startDeg, endDeg = self.startDeg % 360, self.endDeg % 360
         if self.cw:
             startDeg, endDeg = endDeg, startDeg
-        else:
-            startDeg, endDeg = startDeg, endDeg
         px = x - self.cx
         py = y - self.cy
         pDeg = math.degrees(math.atan2(py, px)) % 360
