@@ -64,6 +64,13 @@ class Line:
     def makeParallel(self, x, y, length=1):
         perp = self.makePerpendicular(x, y)
         return perp.makePerpendicular(x, y, length)
+    def isPointOnSegment(self, x, y):
+        ''' Assumes that the given point is on the line '''
+        #dot product of vectors startPoint->(x,y) and startpoint->endPoint
+        K1 = (x - self.x1) * (self.x2 - self.x1) + (y - self.y1) * (self.y2 - self.y1)
+        #dot product of vectors endPoint->(x,y) and endpoint->startPoint
+        K2 = (x - self.x2) * (self.x1 - self.x2) + (y - self.y2) * (self.y1 - self.y2)      
+        return K1 >= 0 and K2 >= 0
     @staticmethod
     def fromPoints(x1, y1, x2, y2, **kwargs):
         return Line(x1, y1, x2, y2, **kwargs)

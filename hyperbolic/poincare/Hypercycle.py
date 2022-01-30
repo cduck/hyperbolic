@@ -83,6 +83,17 @@ class Hypercycle:
             pts.append(Point.fromEuclid(x2, y2))
         except ValueError: pass
         return pts
+    def isPointOnSegment(self, x, y):
+        return self.projShape.isPointOnSegment(x, y)
+    def segmentIntersectionsWithHcycle(self, hcycle2):
+        ''' Returns list of intersections on the segment '''
+        valid = [
+            p
+            for p in self.intersectionsWithHcycle(hcycle2)
+            if (self.isPointOnSegment(*p)
+                and hcycle2.isPointOnSegment(*p))
+        ]
+        return valid
     def trimmed(self, x1, y1, x2, y2, **kwargs):
         ''' Returns a segment of this hypercycle going from x1,y1
             to x2,y2 (assuming that x1,y1 and x2,y2 are on the
