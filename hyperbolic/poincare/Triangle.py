@@ -45,7 +45,7 @@ class Triangle(Polygon):
             #tiny delta for ideal triangles will remove all points
             ip1 = [p 
                     for p in edge.segmentIntersectionsWithHcycle(self.offsetEdge(i-1, delta))  
-                    if not p.isIdeal]
+                    if not p.isIdeal()]
             #tiny delta for ideal triangles will remove all points
             ip2 = [p 
                     for p in edge.segmentIntersectionsWithHcycle(self.offsetEdge(i+1, delta))
