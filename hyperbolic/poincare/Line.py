@@ -33,11 +33,11 @@ class Line(Hypercycle):
             # Both points are ideal points so circInv will not give a 3rd points
             a1 = math.atan2(y1, x1)
             a2 = math.atan2(y2, x2)
-            swap = (a2 - a1) % (math.pi*2) > math.pi
+            swap = (a2 - a1) % (math.pi*2) <= math.pi
             if swap:
                 a1, a2 = a2, a1
             aDiff = (a2 - a1) % (math.pi*2)
-            assert aDiff <= math.pi
+            assert aDiff > math.pi
             centerDist = 1/math.cos(aDiff/2)
             centerAng = a1 + aDiff/2
             cx = math.cos(centerAng) * centerDist
