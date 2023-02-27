@@ -3,11 +3,11 @@ import numpy as np
 
 dtype = np.float64
 
-
 def relaxed_matmul(m1, m2):
     '''Numpy matmul where the summed-over dimensions may not match.
 
-    Extra matrix entries are assumed to be zero.'''
+    Extra matrix entries are assumed to be zero.
+    '''
     promote2 = m2.ndim == 1
     min_dim = min(m1.shape[-1], m2.shape[-2+promote2])
     if promote2:
@@ -15,7 +15,7 @@ def relaxed_matmul(m1, m2):
     return m1[..., :min_dim] @ m2[..., :min_dim, :]
 
 def gram_schmidt(X, tolerance=1e-12, require_li=True):
-    '''Performs Gram-Schmidt orthogonalization on the columns of a matrix.
+    '''Perform Gram-Schmidt orthogonalization on the columns of a matrix.
 
     Args:
         X: The matrix (2D numpy array) with shape (n, p).

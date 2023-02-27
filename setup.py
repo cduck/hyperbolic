@@ -28,8 +28,11 @@ setup(
     classifiers = [
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3',
+        'Framework :: IPython',
+        'Framework :: Jupyter',
     ],
     install_requires = [
         'numpy',
+        'drawsvg~=2.0',
     ],
 )

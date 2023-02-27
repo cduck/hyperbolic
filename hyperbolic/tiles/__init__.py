@@ -1,8 +1,12 @@
-
-from .Edge import Edge
-from .Tile import Tile
-from .TileGen import TileGen
-from .TileLayout import TileLayout
-
-from .decorator import *
-
+from .edge import Edge
+from .tile import Tile
+from .tile_gen import TileGen
+from .tile_layout import TileLayout
+from .decorator import (
+    TileDecorator,
+    TileDecoratorNull,
+    TileDecoratorOffset,
+    TileDecoratorPolygons,
+    TileDecoratorLateInit,
+    TileDecoratorNumbered,
+)

@@ -1,13 +1,12 @@
+from . import line
 
-from .shapes import Line
 
-
-class OriginLine(Line):
+class OriginLine(line.Line):
     def __init__(self, px, py):
         self.px = px
         self.py = py
-    def toLine(self):
-        return Line(0, 0, self.px, self.py)
+    def to_line(self):
+        return line.Line(0, 0, self.px, self.py)
     @property
     def x1(self): return 0
     @property
@@ -24,8 +23,8 @@ class OriginLine(Line):
     def reversed(self):
         return OriginLine(-self.px, -self.py)
     @staticmethod
-    def fromPoints(x1, y1, **kwargs):
+    def from_points(x1, y1, **kwargs):
         return OriginLine(x1, y1, **kwargs)
-    def toDrawables(self, elements, **kwargs):
-        return (elements.Line(self.x1, self.y1, self.x2, self.y2, **kwargs),)
-
+    def to_drawables(self, **kwargs):
+        import drawsvg as draw
+        return (draw.Line(self.x1, self.y1, self.x2, self.y2, **kwargs),)

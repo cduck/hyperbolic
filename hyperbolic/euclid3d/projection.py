@@ -2,6 +2,7 @@ from typing import Optional, Sequence, Tuple
 
 import abc
 import dataclasses
+
 import numpy as np
 
 from .util import dtype, relaxed_matmul
@@ -19,7 +20,7 @@ class Projection(metaclass=abc.ABCMeta):
         '''The dimension of projected coordinates.'''
 
     def project_point(self, point):
-        '''Projects a single point.'''
+        '''Project a single point.'''
         points = np.asarray(point, dtype)[:,np.newaxis]
         return self.project(points)[..., 0]
 
@@ -36,7 +37,7 @@ class Projection(metaclass=abc.ABCMeta):
         return x, y, z
 
     def project_list(self, point_list):
-        '''Projects a list (or list of lists) of points.'''
+        '''Project a list (or list of lists) of points.'''
         if len(point_list) <= 0:
             return np.zeros((0, self.out_dim), dtype)
         point_list = np.atleast_2d(np.asarray(point_list, dtype))
@@ -45,10 +46,10 @@ class Projection(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def project(self, points):
-        '''Projects a numpy array with points in axis index -2.'''
+        '''Project a numpy array with points in axis index -2.'''
 
     def scale_amount_point(self, point):
-        '''Calculates the scaling factor of a coordinate due to perspective.'''
+        '''Calculate the scaling factor of a coordinate due to perspective.'''
         points = np.asarray(point, dtype)[:,np.newaxis]
         return self.scale_amount(points)[..., 0]
 
@@ -56,7 +57,7 @@ class Projection(metaclass=abc.ABCMeta):
         return self.scale_amount_point(coords)
 
     def scale_amount_list(self, point_list):
-        '''Calculates the scaling factor of a list of coordinates due to
+        '''Calculate the scaling factor of a list of coordinates due to
         perspective.
         '''
         if len(point_list) <= 0:
@@ -67,7 +68,7 @@ class Projection(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def scale_amount(self, points):
-        '''Calculates the scaling factor of a numpy array of coordinates due to
+        '''Calculate the scaling factor of a numpy array of coordinates due to
         perspective.
         '''
 
@@ -198,7 +199,7 @@ class LinearProjection(Projection):
 
 @dataclasses.dataclass(frozen=True)
 class MultiProjection(Projection):
-    projections: Tuple[Projection] = ()
+    projections: Tuple[Projection, ...] = ()
 
     @property
     def in_dim(self):
@@ -220,7 +221,7 @@ class MultiProjection(Projection):
             return NotImplemented
         if type(left) == MultiProjection:
             return MultiProjection(self.projections + left.projections)
-        return MultiProjection(right.projections + (left,))
+        return MultiProjection(self.projections + (left,))
 
     def project(self, points):
         for proj in self.projections:

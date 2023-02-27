@@ -1,57 +1,62 @@
-
 import numpy as np
 
 from .. import util
-from . import shapes, intersection
+from . import line
+
 
 class Ellipse:
-    def __init__(self, cx, cy, rx, ry, rotDeg=0):
+    def __init__(self, cx, cy, rx, ry, rot_deg=0):
         self.cx = cx
         self.cy = cy
         self.rx = rx
         self.ry = ry
-        self.rotDeg = rotDeg
+        self.rot_deg = rot_deg
 
     @property
     def rot(self):
-        return np.deg2rad(self.rotDeg)
+        return np.deg2rad(self.rot_deg)
 
-    def pointAtAngle(self, deg):
-        rad = np.deg2rad(deg - self.rotDeg)
+    def point_at_angle(self, deg):
+        rad = np.deg2rad(deg - self.rot_deg)
         s = 1/(np.cos(rad)**2/self.rx**2+np.sin(rad)**2/self.ry**2)**0.5
         x, y = s*np.cos(np.deg2rad(deg)), s*np.sin(np.deg2rad(deg))
         return x+self.cx, y+self.cy
 
-    def semiMajorLine(self):
-        ''' Assumes rx is the semi-major axis and ry is minor '''
+    def semi_major_line(self):
+        '''Return a line along the semi-major axis, assuming rx is along the
+        semi-major axis.
+        '''
         rot = self.rot
         x = self.cx + self.rx * np.cos(rot)
         y = self.cy + self.rx * np.sin(rot)
-        return shapes.Line.fromPoints(self.cx, self.cy, x, y)
+        return line.Line.from_points(self.cx, self.cy, x, y)
 
-    def semiMinorLine(self):
-        ''' Assumes rx is the semi-major axis and ry is minor '''
+    def semi_minor_line(self):
+        '''Return a line along the semi-minor axis, assuming ry is along the
+        semi-minor axis.
+        '''
         rot = self.rot
         x = self.cx + self.ry * -np.sin(rot)
         y = self.cy + self.ry * np.cos(rot)
-        return shapes.Line.fromPoints(self.cx, self.cy, x, y)
+        return line.Line.from_points(self.cx, self.cy, x, y)
 
     @staticmethod
-    def fromFoci(x1, y1, x2, y2, rx):
-        centerLine = shapes.Line.fromPoints(x1, y1, x2, y2)
-        cx, cy = centerLine.midpoint()
-        rotDeg = np.rad2deg(centerLine.atan2())
-        t = (rx**2 - centerLine.length()**2)
+    def from_foci(x1, y1, x2, y2, rx):
+        center_line = line.Line.from_points(x1, y1, x2, y2)
+        cx, cy = center_line.midpoint()
+        rot_deg = np.rad2deg(center_line.atan2())
+        t = (rx**2 - center_line.length()**2)
         if t <= 1e-14:
             raise ValueError('Degenerate major radius length.')
         ry = t ** 0.5
-        return Ellipse(cx, cy, rx, ry, rotDeg)
+        return Ellipse(cx, cy, rx, ry, rot_deg)
 
     @staticmethod
     def _fromCoefficients(a, b, c, d, f, g):
-        ''' Returns the ellipse defined by ax2 + 2bxy + cy2 + 2dx + 2fy + g = 0
+        '''Return the ellipse defined by the parametric equation
+        ax2 + 2bxy + cy2 + 2dx + 2fy + g = 0.
         '''
-        if util.nearZero(b*b - a*c):
+        if util.near_zero(b*b - a*c):
             # Degenerate (point) ellipse
             return None
         # Equations 19-23 of https://mathworld.wolfram.com/Ellipse.html
@@ -63,11 +68,11 @@ class Ellipse:
         ry = (2 * (a*f*f+c*d*d+g*b*b-2*b*d*f-a*c*g)
               / ((b*b-a*c) * (-((a-c)**2+4*b*b)**0.5 - (a+c)))
              ) ** 0.5
-        rotDeg = np.rad2deg(0.5*np.arctan2(2*b, a-c))
-        rotDeg += 180 * (a > c) - 90
-        return Ellipse(cx, cy, rx, ry, rotDeg=rotDeg)
+        rot_deg = np.rad2deg(0.5*np.arctan2(2*b, a-c))
+        rot_deg += 180 * (a > c) - 90
+        return Ellipse(cx, cy, rx, ry, rot_deg=rot_deg)
 
-    def getBoundingQuad(self):
+    def get_bounding_quad(self):
         rot = self.rot
         sx = self.rx * np.cos(rot)
         sy = self.rx * np.sin(rot)
@@ -79,7 +84,7 @@ class Ellipse:
                 (self.cx-sx-tx, self.cy-sy-ty))
 
     @staticmethod
-    def fromBoundingQuad(x0, y0, x1, y1, x2, y2, x3, y3):
+    def from_bounding_quad(x0, y0, x1, y1, x2, y2, x3, y3):
         # Equations from http://chrisjones.id.au/Ellipses/ellipse.html
         mat = np.array([
             [ x1*x2*y3 - x0*x2*y3 - x1*y2*x3 + x0*y2*x3 - x0*y1*x3 + y0*x1*x3 + x0*y1*x2 - y0*x1*x2,
@@ -109,26 +114,27 @@ class Ellipse:
         g = l*l + o*o - r*r
         return Ellipse._fromCoefficients(a, b, c, d, f, g)
 
-    def drawToPath(self, path, includeM=True, includeL=False, cw=False):
+    def draw_to_path(self, path, include_m=True, include_l=False, cw=True):
         rot = self.rot
         sx = self.rx * np.cos(rot)
         sy = self.rx * np.sin(rot)
         ex, ey = -sx, -sy
-        if includeL:
+        if include_l:
             path.L(self.cx+sx, self.cy+sy)
-        elif includeM:
+        elif include_m:
             path.M(self.cx+sx, self.cy+sy)
-        path.A(self.rx, self.ry, -self.rotDeg, False^cw, cw,
+        path.A(self.rx, self.ry, self.rot_deg, False^cw, cw,
                self.cx+ex, self.cy+ey)
-        path.A(self.rx, self.ry, -self.rotDeg, True^cw, cw,
+        path.A(self.rx, self.ry, self.rot_deg, True^cw, cw,
                self.cx+sx, self.cy+sy)
 
-    def toDrawables(self, elements, **ellipseArgs):
+    def to_drawables(self, **ellipse_args):
+        import drawsvg as draw
         trans = 'translate({}, {}) rotate({}) translate({}, {})'.format(
-            self.cx, -self.cy, -self.rotDeg, -self.cx, self.cy)
-        if 'transform' in ellipseArgs:
-            ellipseArgs['transform'] += ' ' + trans
+            self.cx, self.cy, self.rot_deg, -self.cx, -self.cy)
+        if 'transform' in ellipse_args:
+            ellipse_args['transform'] += ' ' + trans
         else:
-            ellipseArgs['transform'] = trans
-        yield elements.Ellipse(self.cx, self.cy, self.rx, self.ry,
-                               **ellipseArgs)
+            ellipse_args['transform'] = trans
+        yield draw.Ellipse(self.cx, self.cy, self.rx, self.ry,
+                               **ellipse_args)

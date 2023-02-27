@@ -1,29 +1,32 @@
-
 import math
 
 
-def radialEuclidToPoincare(r):
+def radial_euclid_to_poincare(r):
     return 2 * math.atanh(r)
-def radialPoincareToEuclid(r):
+def radial_poincare_to_euclid(r):
     return math.tanh(r/2)
-def poincareToEuclidFactor(hr):
+def poincare_to_euclid_factor(hr):
     return math.cosh(hr/2)**2 / 2
 
-def triangleSideForAngles(adj1, adj2, opposite):
-    ''' Uses the hyperbolic law of cosines, solved for the side length
+def triangle_side_for_angles(adj1, adj2, opposite):
+    '''Solve for a hyperbolic triangle side length from three angles.
 
-        Input angles in radians '''
+    Uses the hyperbolic law of cosines to solve for the side length.  Input
+    angles in radians.
+    '''
     A, B, C = adj1, adj2, opposite
     c = math.acosh((math.cos(C) + math.cos(A)*math.cos(B)) /
                    (math.sin(A)*math.sin(B)))
     return c
 
-def triangleAngleOppositeSide(adj1, adj2, oppositeLen):
-    ''' Uses the hyperbolic law of cosines, solved for the angle opposite the
-        given side
+def triangle_angle_opposite_side(adj1, adj2, opposite_len):
+    '''Solve for a hyperbolic triangle angle from the other two angles and
+    opposite side length.
 
-        Input angles in radians '''
-    c, A, B = oppositeLen, adj1, adj2
+    Uses the hyperbolic law of cosines to solve for the angle opposite the given
+    side.  Input angles in radians.
+    '''
+    c, A, B = opposite_len, adj1, adj2
     C = math.acos(math.cosh(c)*math.sin(A)*math.sin(B) -
                   math.cos(A)*math.cos(B))
     return C

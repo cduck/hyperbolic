@@ -1,10 +1,8 @@
-
 from .util import (
     dtype,
     relaxed_matmul,
     gram_schmidt,
 )
-
 from .projection import (
     Projection,
     LinearProjection,
