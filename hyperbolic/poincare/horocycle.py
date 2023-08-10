@@ -4,6 +4,7 @@ from .. import util
 from ..euclid import Circle as ECircle
 from .util import radial_euclid_to_poincare, radial_poincare_to_euclid
 from . import point
+from .transform import Transform
 
 
 class Horocycle:
@@ -38,6 +39,13 @@ class Horocycle:
         shape = ECircle(x, y, er, cw=cw)
         return Horocycle(
                 shape, closest_point=pt, surround_origin=surround_origin)
+    @classmethod
+    def from_center_point(cls,center,pt,cw = True):
+        theta = math.atan2(center.y,center.x)
+        rot = Transform.rotation(rad=-theta)
+        rpt = rot.apply_to_point(pt)
+        d = (rpt.x**2 + rpt.y**2 - rpt.x)/(rpt.x - 1)
+        return cls.from_closest_point_e_polar(d,theta,cw = cw)
     @classmethod
     def from_closest_point_h_polar(cls, hr, theta, cw=True):
         p = point.Point.from_h_polar(hr, theta)
