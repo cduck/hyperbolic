@@ -35,17 +35,17 @@ class Transform:
             raise ValueError('Invalid transform')
         return Ideal(math.atan2(y, x))
     def apply_to_list(self, points, verify=False):
-        if len(points) > 0:
-            if isinstance(points[0], Ideal):
+        def apply(pt):
+            if isinstance(pt, Ideal):
                 if verify:
-                    def f(p): return self.apply_to_ideal(p, verify=True)
+                    return self.apply_to_ideal(pt, verify=True)
                 else:
-                    f = self.apply_to_ideal
-            elif isinstance(points[0], Point):
-                f = self.apply_to_point
+                    return self.apply_to_ideal(pt)
+            elif isinstance(pt, Point):
+                return self.apply_to_point(pt)
             else:
-                f = self.apply_to_tuple
-        return [f(p) for p in points]
+                return self.apply_to_tuple(pt)
+        return [apply(p) for p in points]
     def apply_to_shape(self, shape):
         '''Transform a euclidean shape.
 
