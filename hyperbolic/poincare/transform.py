@@ -88,6 +88,14 @@ class Transform:
         a, b, c, d = self.abcd
         return Transform(a.conjugate(), b.conjugate(),
                          c.conjugate(), d.conjugate(), conj=not self.conj)
+    def det(self):
+        a,b,c,d = self.abcd
+        return a*d - b*c
+    def normalized(self):
+        a,b,c,d = self.abcd
+        n = cmath.sqrt(self.det())
+        return Transform(a/n, b/n, c/n, d/n)
+
     @staticmethod
     def identity():
         return Transform(1,0,0,1,1)
