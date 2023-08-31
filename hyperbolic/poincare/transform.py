@@ -101,7 +101,7 @@ class Transform:
                 a,b,c,d = (a.conjugate(), b.conjugate(), c.conjugate(),
                         d.conjugate())
                 conj = not conj
-            a,b,c,d = a2*a+c2*b, b2*a+d2*b, a2*c+c2*d, b2*c+d2*d
+            a,b,c,d = a2*a+b2*c, a2*b+b2*d, c2*a+d2*c, c2*b+d2*d
         return Transform(a,b,c,d,conj=conj)
     @staticmethod
     def shift_origin(new_origin, new_x=None):
