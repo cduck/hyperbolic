@@ -71,3 +71,20 @@ def test_reversed(original_line, reversed_line):
     if reversed_original_line.__dict__ != reversed_line.__dict__:
         raise ValueError(f'Expected {reversed_original_line.__dict__}. Got {reversed_line.__dict__}.')
 
+
+@pytest.mark.parametrize(
+    'x1, y1, expected_line',
+    [
+        (0, 0, OriginLine(0, 0)),
+        (1, 0, OriginLine(1, 0)),
+        (0, 1, OriginLine(0, 1)),
+        (1, 1, OriginLine(1, 1)),
+    ]
+)
+def test_from_points(x1, y1, expected_line):
+    line_from_points = OriginLine.from_points(x1=x1, y1=y1)
+
+    if isinstance(line_from_points, OriginLine) is False:
+        raise TypeError(f'Expected instance of class Originline. Got {type(line_from_points)}.')
+    if line_from_points.__dict__ != expected_line.__dict__:
+        raise ValueError(f'Expected {expected_line.__dict__}. Got {line_from_points.__dict__}.')
