@@ -95,13 +95,13 @@ class Transform:
     def merge(*transfoms):
         a,b,c,d = 1,0,0,1
         conj = False
-        for i, trans in enumerate(transfoms):
+        for trans in reversed(transfoms):
             a2,b2,c2,d2 = trans.abcd
             if trans.conj:
                 a,b,c,d = (a.conjugate(), b.conjugate(), c.conjugate(),
                         d.conjugate())
                 conj = not conj
-            a,b,c,d = a*a2+c*b2, b*a2+d*b2, a*c2+c*d2, b*c2+d*d2
+            a,b,c,d = a2*a+b2*c, a2*b+b2*d, c2*a+d2*c, c2*b+d2*d
         return Transform(a,b,c,d,conj=conj)
     @staticmethod
     def shift_origin(new_origin, new_x=None):
