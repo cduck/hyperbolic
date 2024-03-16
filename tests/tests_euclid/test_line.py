@@ -92,9 +92,11 @@ def test_length(line, expected_length):
     'line_1, line_2, answer',
     [
         (Line(0, 0, 0, 0), Line(0, 0, 0, 0), True),
+        (Line(0, 0, 1, 1), Line(1, 1, 0, 0), True),
         (Line(0, 0, 0, 1), Line(1, 0, 1, 0), False),
         (Line(0, 0, 1, 1), Line(0, 1, 1, 0), False),
-        (Line(0, 0, 1, 0), Line(1, 0, 1, 0), True),
+        (Line(0, 0, 1, 0), Line(1, 0, 1, 1), False),
+        (Line(-1, -1, 0, 0), Line(0, 0, 10, 9), False),
     ]
 )
 def test_parallel_to(line_1, line_2, answer):
